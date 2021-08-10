@@ -1,0 +1,140 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+  <div class="feed"> 
+    <div class="feed__header">
+      <h2>Home</h2>
+    </div>
+
+    <div class="tweetBox">
+        {% if user.is_authenticated %}
+        <form id="postform">
+          <div class="tweetbox__input">
+            <img
+              src={{user.upload.url}}  
+              alt=""
+            />
+            
+            {% csrf_token %}   
+            {{postform}}
+          </div>
+          <button id="submit" class="tweetBox__tweetButton">Tweet</button>
+        </form>
+        {%endif%}
+      </div>
+
+    <div id="posts">
+        {% for post in page_obj %}
+          <div class="post" id = "post" data-id={{post.id}}>
+
+            <div class="post__avatar">
+              <img
+                src= {{ post.poster.upload.url }} 
+                alt=""
+              />
+            </div>
+
+            <div class="post__body">
+              <div class="post__header">
+                <div class="post__headerText">
+                  <h3>
+                    <a class="userName" href="{% url 'profile' post.poster.id %}">       
+                      {{post.poster}}
+                    </a>
+                    <span class="post__headerSpecial">
+                      <span class="material-icons post__badge"> 
+                        verified 
+                      </span>{{post.datetime }}
+
+                    </span>
+                    <span id="editdiv" class="material-icons-outlined">
+                      edit
+                    </span>
+                  </h3>
+                </div>
+                
+                <div id="contentarea" class="post__headerDescription">           
+                  <p>{{ post.caption }}</p>
+                </div>
+                
+                <div id="editarea" class="post__headerDescription">
+                    <textarea class="tweetbox__input" id="txtid" name="txtname" rows="2" cols="50" maxlength="256"></textarea>    
+                </div>
+              </div>
+                
+              <div class="post__footer">
+                {% if user.is_authenticated %}
+                  <span  class="material-icons-outlined">
+                    share
+                  </span>
+                    
+                  <div id="likearea">
+                    <div>
+                      <span id="likebutton" data-id={{post.id}} class="material-icons"> favorite_border </span>
+                    </div>
+                    
+                    <div id="likecount">
+                      {{post.likes.all.count}}
+                    </div>
+                  </div>
+
+                  <span class="material-icons"> add_circle </span> 
+                {%endif%}
+              </div>
+
+              {% if user.is_authenticated %}
+                  <span id="submitedit" class="material-icons" data-id={{post.id}}>
+                    save
+                  </span>   
+              {%endif%}
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+
+     <nav id="paginationNav" aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+          </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+          </li>
+        {% endif %}
+
+        {% if page_obj.number|add:'-4' > 1 %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'-5' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% for i in page_obj.paginator.page_range %}
+            {% if page_obj.number == i %}
+                <li class="page-item active" aria-current="page">
+              <span class="page-link">
+                {{ i }}
+                <span class="sr-only">(current)</span>
+              </span>
+            </li>
+            {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %}
+                 <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.paginator.num_pages > page_obj.number|add:'4' %}
+           <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'5' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+{% endblock %}

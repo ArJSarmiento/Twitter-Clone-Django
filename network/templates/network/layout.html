@@ -1,0 +1,126 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        
+        <script type="text/javascript" src="{% static 'network/script.js' %}"></script>
+        
+        <title>{% block title %}Social Network{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+        <link rel="icon" href="{% static 'network/twt.png' %}">
+        <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+          integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+          crossorigin="anonymous"
+        />
+    </head>
+
+    <body>
+        <div class="sidebar"> 
+            <a href="{% url 'index' %}">
+                <i class="fab fa-twitter"></i>
+            </a>
+  
+            <div class="sidebarOption active">
+                <a href="{% url 'index' %}">
+                    <span class="material-icons">
+                        home
+                    </span>         
+                    <h2>Home</h2>
+                </a>
+            </div>
+            
+            {% if user.is_authenticated %}
+                <div class="sidebarOption">
+                    <a href="{% url 'profile' user.id %}">
+                        <span class="material-icons">
+                            perm_identity
+                        </span>
+                        <h2>{{user.username}}</h2>
+                    </a>
+                </div>
+            {% endif %}
+                
+            {% if user.is_authenticated %}
+
+                <div class="sidebarOption">
+                    <a href="{% url 'following' %}">
+                        <span class="material-icons-outlined">
+                            people
+                        </span>
+                        <h2>Following</h2>
+                    </a> 
+                </div>
+        
+                <div class="sidebarOption">
+                    <a href="{% url 'logout' %}">
+                        <span class="material-icons"> 
+                            logout
+                        </span>
+                        <h2>Log Out</h2>
+                    </a>
+                </div>
+            {% else %}
+                <div class="sidebarOption">
+                    <a href="{% url 'login' %}">
+                        <span class="material-icons"> 
+                            login
+                        </span>
+                        <h2>Log In</h2>
+                    </a>
+                </div>
+
+                <div class="sidebarOption">
+                    <a href="{% url 'register' %}">
+                        <span class="material-icons">
+                            app_registration
+                        </span>
+                        <h2>Register</h2>
+                    </a>
+                </div>
+            {% endif %}  
+        </div>
+        
+        <div class="body">
+            {% block body %}
+            {% endblock %}
+        </div>
+
+            <!-- widgets starts -->
+        <div class="widgets">
+            <div class="widgets__input">
+                <span class="material-icons widgets__searchIcon"> search </span>
+                <input type="text" placeholder="Search Twitter" />
+            </div>
+    
+            <div class="widgets__widgetContainer">
+                <h2>What's happening?</h2>
+                <blockquote class="twitter-tweet">
+                    <p lang="en" dir="ltr">
+                    Sunsets don&#39;t get much better than this one over
+                    <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>.
+                    <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw"
+                        >#nature</a
+                    >
+                    <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw"
+                        >#sunset</a
+                    >
+                    <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a>
+                    </p>
+                    &mdash; US Department of the Interior (@Interior)
+                    <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw"
+                    >May 5, 2014</a
+                    >
+                </blockquote>
+                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+        </div>
+    </body>
+</html>
